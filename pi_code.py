@@ -8,6 +8,12 @@ from picamera import PiCamera
 
 camera = PiCamera()
 TEMP_PICTURE_PATH = '/home/pi/Desktop/image.jpg'
+f = 0.0034
+T = 0.1
+template = None
+numRotations = 1
+sensorWidth = 0.00276
+ArduinoUnoSerial = None
 
 def cleanDuplicates(Xs, Zs):
 	realZs = []
@@ -27,7 +33,7 @@ def cleanDuplicates(Xs, Zs):
 
 def take_picture():
     camera.start_preview()
-    sleep(5)
+    time.sleep(5)
     camera.capture(TEMP_PICTURE_PATH)
     camera.stop_preview()
     return cv2.imread(TEMP_PICTURE_PATH)
@@ -59,8 +65,8 @@ def findFires(rotations):
 
 
 		#TODO: TAKE TWO PICTURES AND SAVE TO IMG1, IMG2
-                result = subprocess.run(['sshpass', '-p', '1', 'scp', IMG1, 'shermanluo@192.168.?/Desktop/280proj'], stdout=subprocess.PIPE)
-                result = subprocess.run(['sshpass', '-p', '1', 'scp', IMG2, 'shermanluo@192.168.?/Desktop/280proj'], stdout=subprocess.PIPE)
+                result = subprocess.run(['sshpass', '-p', '1', 'scp', IMG1, 'shermanluo@192.168.1.87/Desktop/280proj'], stdout=subprocess.PIPE)
+                result = subprocess.run(['sshpass', '-p', '1', 'scp', IMG2, 'shermanluo@192.168.1.98/Desktop/280proj'], stdout=subprocess.PIPE)
                 result = subprocess.run(['python', '280.py', IMG1, IMG2], stdout=subprocess.PIPE)
                 temp = ast.literal_eval(result.stdout)
 		Zs += temp[1]
@@ -105,6 +111,6 @@ def killFires():
 
 
 
-def main():
-		ArduinoUnoSerial = serial.Serial('com15',9600)       #Create Serial port object called ArduinoUnoSerialData time.sleep(2)                                                             #wait for 2 secounds for the communication to get established
-		killFires()
+ArduinoUnoSerial = serial.Serial('com15',9600)
+time.sleep(2)
+killFires()
