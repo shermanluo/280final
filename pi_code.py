@@ -1,3 +1,5 @@
+import subprocess
+import ast
 import cv2
 import numpy as np
 import time
@@ -57,9 +59,10 @@ def findFires(rotations):
 
 
 		#TODO: TAKE TWO PICTURES AND SAVE TO IMG1, IMG2
-		IMG1 = ''
-		IMG2 = ''
-		temp = processImages(theta, image1 = IMG1, image2 = IMG2, template = template)
+                result = subprocess.run(['sshpass', '-p', '1', 'scp', IMG1, 'shermanluo@192.168.?/Desktop/280proj'], stdout=subprocess.PIPE)
+                result = subprocess.run(['sshpass', '-p', '1', 'scp', IMG2, 'shermanluo@192.168.?/Desktop/280proj'], stdout=subprocess.PIPE)
+                result = subprocess.run(['python', '280.py', IMG1, IMG2], stdout=subprocess.PIPE)
+                temp = ast.literal_eval(result.stdout)
 		Zs += temp[1]
 		Xs += temp[0]
 	if not Zs:
